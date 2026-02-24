@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sanremo 2026 - Scegli il tuo artista</title>
+
+  <!-- Poppins font -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --blue-gradient: linear-gradient(135deg, #0a1628, #1e4f91, #4a7fcf, #6b9fe8);
+      --yellow-gradient: linear-gradient(135deg, #ffd600, #ffeb67);
+      --white: #ffffff;
+      --font: "Poppins", sans-serif;
+      --ink: #13263f;
+      --card-shadow: 0 12px 28px rgba(14, 32, 56, 0.22);
+      --card-shadow-hover: 0 16px 34px rgba(14, 32, 56, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: var(--font);
+    }
+
+    body {
+      margin: 0;
+      background: var(--blue-gradient);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem 3rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 1.75rem;
+      width: 100%;
+      max-width: 980px;
+    }
+
+    .logo {
+      width: 180px;
+      height: auto;
+      margin: 0 auto 1.5rem;
+      display: block;
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
+    }
+
+    header h1 {
+      margin: 0 0 0.5rem;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 900;
+      background: linear-gradient(145deg, #ff1493, #ff69b4, #ffd700, #ffeb67);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 4px 12px rgba(255, 20, 147, 0.5);
+      filter: drop-shadow(0 4px 8px rgba(255, 215, 0, 0.4));
+      letter-spacing: 2px;
+    }
+
+    header h1 .sanremo {
+      color: #ff1493;
+      -webkit-text-fill-color: #ff1493;
+    }
+
+    header h1 .lenny {
+      color: #ffd700;
+      -webkit-text-fill-color: #ffd700;
+    }
+
+    header p {
+      margin: 0.8rem auto;
+      font-size: clamp(0.95rem, 2.2vw, 1.2rem);
+      font-weight: 600;
+      line-height: 1.5;
+      padding: 0.8rem 1.2rem;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 0.8rem;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      max-width: 800px;
+      backdrop-filter: blur(10px);
+    }
+
+    main {
+      width: 100%;
+      max-width: 980px;
+    }
+
+    .intro {
+      text-align: center;
+      font-size: clamp(1rem, 2.2vw, 1.25rem);
+      margin: 0 0 1rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.12);
+      padding: 0.9rem 1rem;
+      border-radius: 0.8rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .prize-table {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 0.9rem;
+      padding: 1.2rem;
+      margin-bottom: 1.5rem;
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      backdrop-filter: blur(8px);
+    }
+
+    .prize-table h3 {
+      margin: 0 0 0.8rem;
+      font-size: clamp(1.1rem, 2.4vw, 1.4rem);
+      font-weight: 700;
+      text-align: center;
+      color: #ffd700;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .prize-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 0.8rem;
+      margin-bottom: 0.5rem;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 0.6rem;
+      font-size: clamp(0.9rem, 2vw, 1.05rem);
+      border-left: 4px solid #ffd700;
+    }
+
+    .prize-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .prize-position {
+      font-weight: 700;
+      color: #ffeb67;
+    }
+
+    .prize-value {
+      font-weight: 700;
+      color: #ffd700;
+      font-size: clamp(1rem, 2.2vw, 1.15rem);
+    }
+
+    #cardsContainer {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .artist-card {
+      border: 0;
+      width: 100%;
+      background: var(--white);
+      color: var(--ink);
+      border-radius: 1.1rem;
+      box-shadow: var(--card-shadow);
+      display: grid;
+      grid-template-columns: 118px 1fr;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.95rem;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      text-align: left;
+    }
+
+    .artist-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--card-shadow-hover);
+    }
+
+    .artist-card:active {
+      transform: scale(0.985);
+    }
+
+    .artist-photo {
+      width: 118px;
+      height: 118px;
+      border-radius: 0.95rem;
+      object-fit: cover;
+      background: #dbe8ff;
+    }
+
+    .artist-meta {
+      min-width: 0;
+    }
+
+    .artist-name {
+      margin: 0;
+      font-size: clamp(1.2rem, 2.8vw, 1.55rem);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .artist-song {
+      margin: 0.45rem 0 0;
+      font-size: clamp(1rem, 2.3vw, 1.18rem);
+      color: #274e83;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .artist-pill {
+      margin-top: 0.65rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      background: var(--yellow-gradient);
+      color: #1e2a3b;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+
+    .modal-actions button {
+      flex: 1;
+      border: none;
+      border-radius: 0.75rem;
+      padding: 0.85rem 1rem;
+      font-size: 1.02rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+
+    .modal-actions button:hover {
+      opacity: 0.95;
+    }
+
+    .modal-actions button:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: var(--yellow-gradient);
+      color: #111;
+    }
+
+    .btn-ghost {
+      background: #edf3ff;
+      color: #204c88;
+    }
+
+    dialog {
+      border: none;
+      border-radius: 1rem;
+      padding: 1.25rem;
+      max-width: 460px;
+      width: calc(100% - 2rem);
+      box-shadow: 0 18px 44px rgba(14, 32, 56, 0.35);
+    }
+
+    dialog::backdrop {
+      background: rgba(0, 10, 28, 0.58);
+    }
+
+    .dialog-title {
+      margin: 0 0 0.4rem;
+      color: #1f3d6d;
+      font-size: 1.35rem;
+    }
+
+    .dialog-text {
+      margin: 0;
+      color: #223a61;
+      font-size: 1.04rem;
+      line-height: 1.45;
+    }
+
+    #promoMessage {
+      margin: 0.35rem 0 0;
+      font-weight: bold;
+      font-size: 1.08rem;
+      color: #15335c;
+    }
+
+    #promoCode {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 0.8rem;
+      padding: 0.8rem 1.2rem;
+      background: linear-gradient(135deg, #ffd600, #ffeb67);
+      border-radius: 0.6rem;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #111;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    #promoCode:hover {
+      transform: scale(1.05);
+    }
+
+    #promoCode:active {
+      transform: scale(0.98);
+    }
+
+    #votedPromoCode:hover,
+    #finalPromoCode:hover {
+      transform: scale(1.05);
+    }
+
+    #votedPromoCode:active,
+    #finalPromoCode:active {
+      transform: scale(0.98);
+    }
+
+    .copy-icon {
+      width: 20px;
+      height: 20px;
+      opacity: 0.7;
+    }
+
+    #submitFormBtn {
+      margin-top: 0.9rem;
+      width: 100%;
+      border: 0;
+      border-radius: 0.75rem;
+      padding: 0.85rem;
+      font-size: 1rem;
+      font-weight: 700;
+      background: var(--yellow-gradient);
+      color: #111;
+      cursor: pointer;
+    }
+
+    #emailInput {
+      width: 100%;
+      padding: 0.8rem;
+      border: 2px solid #ddd;
+      border-radius: 0.6rem;
+      font-size: 1rem;
+      margin-top: 0.8rem;
+      font-family: var(--font);
+    }
+
+    #emailInput:focus {
+      outline: none;
+      border-color: #4a7fcf;
+    }
+
+    @media (max-width: 640px) {
+      .artist-card {
+        grid-template-columns: 92px 1fr;
+        padding: 0.8rem;
+      }
+
+      .artist-photo {
+        width: 92px;
+        height: 92px;
+      }
+
+      .artist-song {
+        white-space: normal;
+        overflow: visible;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <img src="./images/lenny-logo.png?v=2" alt="Lenny Logo" class="logo" />
+    <h1><span class="sanremo">Sanremo 2026</span> × <span class="lenny">Lenny</span></h1>
+    <p>Scegli l'artista che vincerà Sanremo 2026 e goditi un favoloso sconto su Lenny!</p>
+  </header>
+
+  <main>
+    <p class="intro">Seleziona una card, clicca su Sì, copia il codice sconto e clicca "Invia il sondaggio".</p>
+    
+    <div class="prize-table">
+      <h3>🏆 Premi in Palio 🏆</h3>
+      <p style="text-align: center; margin: 0 0 1rem; font-size: 0.95rem; opacity: 0.9;">Il tuo codice sconto base vale 4€. Se il tuo artista si posiziona bene, il valore aumenta!</p>
+      <div class="prize-item">
+        <span class="prize-position">🥇 1° Posto</span>
+        <span class="prize-value">codice → 15€</span>
+      </div>
+      <div class="prize-item">
+        <span class="prize-position">🥈 2° Posto</span>
+        <span class="prize-value">codice → 10€</span>
+      </div>
+      <div class="prize-item">
+        <span class="prize-position">🥉 3° Posto</span>
+        <span class="prize-value">codice → 8€</span>
+      </div>
+      <div class="prize-item">
+        <span class="prize-position">🎖️ 4° o 5° Posto</span>
+        <span class="prize-value">codice → 6€</span>
+      </div>
+    </div>
+
+    <div id="cardsContainer"></div>
+  </main>
+
+  <dialog id="confirmDialog">
+    <h2 class="dialog-title">Conferma scelta</h2>
+    <p id="confirmMessage" class="dialog-text"></p>
+    <div class="modal-actions">
+      <button id="confirmYesBtn" class="btn-primary">Sì</button>
+      <button id="confirmNoBtn" class="btn-ghost">No</button>
+    </div>
+  </dialog>
+
+  <dialog id="emailDialog">
+    <h2 class="dialog-title">Inserisci la tua email</h2>
+    <p class="dialog-text">Per partecipare al sondaggio, inserisci il tuo indirizzo email.</p>
+    <input type="email" id="emailInput" placeholder="tuaemail@esempio.com" required />
+    <div class="modal-actions">
+      <button id="emailSubmitBtn" class="btn-primary">Continua</button>
+    </div>
+  </dialog>
+
+  <dialog id="alreadyVotedDialog">
+    <h2 class="dialog-title">Hai già effettuato la tua votazione</h2>
+    <p class="dialog-text" style="margin-bottom: 1rem;">Ecco il riepilogo della tua votazione:</p>
+    <div style="background: rgba(30, 79, 145, 0.1); padding: 1rem; border-radius: 0.8rem; margin-bottom: 1rem;">
+      <p style="margin: 0 0 0.5rem; font-weight: 700; color: #1f3d6d; font-size: 1.1rem;" id="votedArtist"></p>
+      <p style="margin: 0; color: #274e83; font-size: 0.95rem;" id="votedPrize">Premio attuale: 4€</p>
+    </div>
+    <p class="dialog-text" style="margin: 0.5rem 0;">Il tuo codice sconto:</p>
+    <div id="votedPromoCode" title="Clicca per copiare" style="display: inline-flex; align-items: center; gap: 0.6rem; margin-top: 0.5rem; padding: 0.8rem 1.2rem; background: linear-gradient(135deg, #ffd600, #ffeb67); border-radius: 0.6rem; font-size: 1.5rem; font-weight: 900; color: #111; letter-spacing: 2px; cursor: pointer; transition: transform 0.15s ease;">
+      <span id="votedCodeText"></span>
+      <span style="opacity: 0.7;">📋</span>
+    </div>
+  </dialog>
+
+  <dialog id="finalDialog">
+    <h2 class="dialog-title">La tua votazione è stata registrata</h2>
+    <p class="dialog-text" style="font-size: 1.1rem; font-weight: 600;">In bocca al lupo e che vinca il migliore!</p>
+    <p class="dialog-text" style="margin-top: 1rem;">Il tuo codice sconto:</p>
+    <div id="finalPromoCode" title="Clicca per copiare" style="display: inline-flex; align-items: center; gap: 0.6rem; margin-top: 0.8rem; padding: 0.8rem 1.2rem; background: linear-gradient(135deg, #ffd600, #ffeb67); border-radius: 0.6rem; font-size: 1.5rem; font-weight: 900; color: #111; letter-spacing: 2px; cursor: pointer; transition: transform 0.15s ease;">
+      <span id="finalCodeText"></span>
+      <span style="opacity: 0.7;">📋</span>
+    </div>
+  </dialog>
+
+  <dialog id="promoDialog">
+    <h2 class="dialog-title">Codice sconto assegnato</h2>
+    <p class="dialog-text">Hai scelto il tuo vincitore! Questo codice vale 4€ sul prossimo ordine in app.</p>
+    <p id="promoMessage"></p>
+    <div id="promoCode" title="Clicca per copiare">
+      <span id="codeText"></span>
+      <span class="copy-icon">📋</span>
+    </div>
+    <button id="submitFormBtn" style="display:none">Invia al sondaggio</button>
+    <div class="modal-actions">
+      <button id="closeDialog" class="btn-ghost">Chiudi</button>
+    </div>
+  </dialog>
+
+  <script>
+    // Check if user has already voted
+    const votedData = localStorage.getItem('sanremo2026_vote');
+    const emailDialog = document.getElementById("emailDialog");
+    const emailInput = document.getElementById("emailInput");
+    const emailSubmitBtn = document.getElementById("emailSubmitBtn");
+    const alreadyVotedDialog = document.getElementById("alreadyVotedDialog");
+    const finalDialog = document.getElementById("finalDialog");
+
+    if (votedData) {
+      // User has already voted, show summary
+      const vote = JSON.parse(votedData);
+      document.getElementById("votedArtist").textContent = `Artista: ${vote.artist}`;
+      document.getElementById("votedCodeText").textContent = vote.code;
+      alreadyVotedDialog.showModal();
+      
+      // Disable all artist cards
+      document.body.style.pointerEvents = "none";
+      alreadyVotedDialog.style.pointerEvents = "all";
+      
+      // Copy code functionality for already voted dialog
+      document.getElementById("votedPromoCode").addEventListener("click", () => {
+        const code = document.getElementById("votedCodeText").textContent;
+        navigator.clipboard.writeText(code).then(() => {
+          const codeEl = document.getElementById("votedPromoCode");
+          const originalHTML = codeEl.innerHTML;
+          codeEl.innerHTML = '<span>✅ Copiato!</span>';
+          setTimeout(() => {
+            codeEl.innerHTML = originalHTML;
+          }, 1500);
+        }).catch(() => {
+          alert("Codice: " + code);
+        });
+      });
+    } else {
+      // Show email dialog
+      emailDialog.showModal();
+    }
+
+    emailSubmitBtn.addEventListener("click", () => {
+      const email = emailInput.value.trim();
+      if (!email || !email.includes("@")) {
+        alert("Inserisci un indirizzo email valido");
+        return;
+      }
+      
+      // Save email temporarily
+      sessionStorage.setItem('sanremo2026_email', email);
+      emailDialog.close();
+    });
+
+    // elenco dei 30 artisti con titolo del brano
+    const artists = [
+      {name: "Arisa", song: "Magica favola"},
+      {name: "Bambole di pezza", song: "Resta con me"},
+      {name: "Chiello", song: "Ti penso sempre"},
+      {name: "Dargen D'Amico", song: "AI AI"},
+      {name: "Ditonellapiaga", song: "Che fastidio!"},
+      {name: "Eddie Brock", song: "Avvoltoi"},
+      {name: "Elettra Lamborghini", song: "Voilà"},
+      {name: "Enrico Nigiotti", song: "Ogni volta che non so volare"},
+      {name: "Ermal Meta", song: "Stella stellina"},
+      {name: "Fedez & Marco Masini", song: "Male necessario"},
+      {name: "Francesco Renga", song: "Il meglio di me"},
+      {name: "Fulminacci", song: "Stupida sfortuna"},
+      {name: "J-Ax", song: "Italia Starter Pack"},
+      {name: "LDA & Aka 7even", song: "Poesie clandestine"},
+      {name: "Leo Gassmann", song: "Naturale"},
+      {name: "Levante", song: "Sei tu"},
+      {name: "Luchè", song: "Labirinto"},
+      {name: "Malika Ayane", song: "Animali notturni"},
+      {name: "Mara Sattei", song: "Le cose che non sai di me"},
+      {name: "Maria Antonietta & Colombre", song: "La felicità e basta"},
+      {name: "Michele Bravi", song: "Prima o poi"},
+      {name: "Nayt", song: "Prima che"},
+      {name: "Patty Pravo", song: "Opera"},
+      {name: "Raf", song: "Ora e per sempre"},
+      {name: "Sal Da Vinci", song: "Per sempre sì"},
+      {name: "Samurai Jay", song: "Ossessione"},
+      {name: "Sayf", song: "Tu mi piaci tanto"},
+      {name: "Serena Brancale", song: "Qui con me"},
+      {name: "Tommaso Paradiso", song: "I romantici"},
+      {name: "Tredici Pietro", song: "Uomo che cade"},
+    ];
+
+    const wikipediaTitles = {
+      "Arisa": "Arisa",
+      "Bambole di pezza": "Bambole_di_pezza",
+      "Chiello": "Chiello",
+      "Dargen D'Amico": "Dargen_D'Amico",
+      "Ditonellapiaga": "Ditonellapiaga",
+      "Eddie Brock": "Eddie_Brock_(cantante)",
+      "Elettra Lamborghini": "Elettra_Lamborghini",
+      "Enrico Nigiotti": "Enrico_Nigiotti",
+      "Ermal Meta": "Ermal_Meta",
+      "Fedez & Marco Masini": "Fedez",
+      "Francesco Renga": "Francesco_Renga",
+      "Fulminacci": "Fulminacci",
+      "J-Ax": "J-Ax",
+      "LDA & Aka 7even": "LDA_(cantante)",
+      "Leo Gassmann": "Leo_Gassmann",
+      "Levante": "Levante_(cantante)",
+      "Luchè": "Luch%C3%A8",
+      "Malika Ayane": "Malika_Ayane",
+      "Mara Sattei": "Mara_Sattei",
+      "Maria Antonietta & Colombre": "Maria_Antonietta_(cantautrice)",
+      "Michele Bravi": "Michele_Bravi",
+      "Nayt": "Nayt",
+      "Patty Pravo": "Patty_Pravo",
+      "Raf": "Raf_(cantante)",
+      "Sal Da Vinci": "Sal_Da_Vinci",
+      "Samurai Jay": "Samurai_Jay",
+      "Sayf": "Sayf",
+      "Serena Brancale": "Serena_Brancale",
+      "Tommaso Paradiso": "Tommaso_Paradiso",
+      "Tredici Pietro": "Tredici_Pietro",
+    };
+
+    // Hardcoded photos for artists without Wikipedia thumbnails (from various sources)
+    const customPhotos = {
+      "Chiello": "https://hips.hearstapps.com/hmg-prod/images/italian-rapper-and-singer-chiello-and-italian-singer-rose-news-photo-1770045657.pjpeg?crop=1xw:1xh;center,top&resize=480:*",
+      "Eddie Brock": "./images/eddie-brock.jpg",
+      "Maria Antonietta & Colombre": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Colombre_%26_Maria_Antonietta%2C_%E2%80%9CLes_nuits_de_la_Bomba%E2%80%9D%2C_Cabaret_Sauvage%2C_Paris%2C_France_%2812-09-2024%29_%C2%B7_%C2%A9_Danilo_Sam%C3%A0.jpg/500px-Colombre_%26_Maria_Antonietta%2C_%E2%80%9CLes_nuits_de_la_Bomba%E2%80%9D%2C_Cabaret_Sauvage%2C_Paris%2C_France_%2812-09-2024%29_%C2%B7_%C2%A9_Danilo_Sam%C3%A0.jpg",
+      "Nayt": "./images/nayt.jpg",
+      "Samurai Jay": "./images/samurai-jay.jpg",
+      "Sayf": "./images/sayf.jpg",
+      "Tredici Pietro": "./images/tredici-pietro.jpg",
+    };
+
+    function generateCode() {
+      const letters = Math.random().toString(36).substring(2, 5).toUpperCase();
+      const nums = Math.floor(Math.random() * 900 + 100);
+      return letters + nums;
+    }
+
+    const codes = {};
+    artists.forEach(a => (codes[a.name] = generateCode()));
+
+    const cardsContainer = document.getElementById("cardsContainer");
+    const confirmDialog = document.getElementById("confirmDialog");
+    const confirmMessage = document.getElementById("confirmMessage");
+    const confirmYesBtn = document.getElementById("confirmYesBtn");
+    const confirmNoBtn = document.getElementById("confirmNoBtn");
+    const promoDialog = document.getElementById("promoDialog");
+    const promoMessage = document.getElementById("promoMessage");
+    const submitFormBtn = document.getElementById("submitFormBtn");
+    const closeDialog = document.getElementById("closeDialog");
+    let selectedArtist = "";
+
+    async function getArtistPhoto(name) {
+      // Check if we have a custom photo first
+      if (customPhotos[name]) {
+        return customPhotos[name];
+      }
+
+      const title = wikipediaTitles[name] || encodeURIComponent(name);
+      const fallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=256&background=4a7fcf&color=ffffff&bold=true`;
+
+      try {
+        const response = await fetch(`https://it.wikipedia.org/api/rest_v1/page/summary/${title}`);
+        if (!response.ok) return fallback;
+        const data = await response.json();
+        return data?.thumbnail?.source || fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    artists.forEach(async (artist) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "artist-card";
+      card.dataset.artist = artist.name;
+
+      const img = document.createElement("img");
+      img.className = "artist-photo";
+      img.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(artist.name)}&size=256&background=4a7fcf&color=ffffff&bold=true`;
+      img.alt = `Foto artista ${artist.name}`;
+
+      const meta = document.createElement("div");
+      meta.className = "artist-meta";
+
+      const h2 = document.createElement("h2");
+      h2.className = "artist-name";
+      h2.textContent = artist.name;
+
+      const p = document.createElement("p");
+      p.className = "artist-song";
+      p.textContent = artist.song;
+
+      const pill = document.createElement("span");
+      pill.className = "artist-pill";
+      pill.textContent = "Clicca per scegliere";
+
+      meta.appendChild(h2);
+      meta.appendChild(p);
+      meta.appendChild(pill);
+      card.appendChild(img);
+      card.appendChild(meta);
+      cardsContainer.appendChild(card);
+
+      img.src = await getArtistPhoto(artist.name);
+    });
+
+    cardsContainer.addEventListener("click", (e) => {
+      const card = e.target.closest(".artist-card");
+      if (!card) return;
+
+      selectedArtist = card.dataset.artist;
+      confirmMessage.textContent = `Sei sicuro di scegliere ${selectedArtist} come vincitore di Sanremo?`;
+      confirmDialog.showModal();
+    });
+
+    confirmNoBtn.addEventListener("click", () => {
+      confirmDialog.close();
+    });
+
+    confirmYesBtn.addEventListener("click", () => {
+      confirmDialog.close();
+      if (!selectedArtist) return;
+      const code = codes[selectedArtist];
+      promoMessage.textContent = `Codice sconto 4€ per ${selectedArtist}:`;
+      document.getElementById("codeText").textContent = code;
+      submitFormBtn.style.display = "inline-block";
+      promoDialog.showModal();
+    });
+
+    document.getElementById("promoCode").addEventListener("click", () => {
+      const code = document.getElementById("codeText").textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const codeEl = document.getElementById("promoCode");
+        const originalText = codeEl.innerHTML;
+        codeEl.innerHTML = '<span>✅ Copiato!</span>';
+        setTimeout(() => {
+          codeEl.innerHTML = originalText;
+        }, 1500);
+      }).catch(() => {
+        alert("Codice: " + code);
+      });
+    });
+
+    closeDialog.addEventListener("click", () => {
+      promoDialog.close();
+      submitFormBtn.style.display = "none";
+    });
+
+    submitFormBtn.addEventListener("click", () => {
+      if (!selectedArtist) return;
+      const code = codes[selectedArtist];
+      const email = sessionStorage.getItem('sanremo2026_email');
+      
+      // Save vote to localStorage
+      const voteData = {
+        email: email,
+        artist: selectedArtist,
+        code: code,
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem('sanremo2026_vote', JSON.stringify(voteData));
+      
+      // Close promo dialog and show final message
+      promoDialog.close();
+      document.getElementById("finalCodeText").textContent = code;
+      finalDialog.showModal();
+      
+      // Disable all further interactions
+      document.body.style.pointerEvents = "none";
+      finalDialog.style.pointerEvents = "all";
+      
+      // Open Google Form
+      const baseUrl = "https://docs.google.com/forms/d/e/FORM_ID/viewform?usp=pp_url";
+      const params = new URLSearchParams();
+      params.set("entry.ARTISTA", selectedArtist);
+      params.set("entry.CODICE", code);
+      window.open(baseUrl + "&" + params.toString(), "_blank");
+    });
+
+    // Copy code functionality for final dialog
+    document.getElementById("finalPromoCode").addEventListener("click", () => {
+      const code = document.getElementById("finalCodeText").textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const codeEl = document.getElementById("finalPromoCode");
+        const originalHTML = codeEl.innerHTML;
+        codeEl.innerHTML = '<span>✅ Copiato!</span>';
+        setTimeout(() => {
+          codeEl.innerHTML = originalHTML;
+        }, 1500);
+      }).catch(() => {
+        alert("Codice: " + code);
+      });
+    });
+  </script>
+</body>
+</html>
