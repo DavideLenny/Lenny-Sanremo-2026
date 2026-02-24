@@ -387,7 +387,7 @@
   </header>
 
   <main>
-    <p class="intro">Seleziona una card, clicca su Sì, copia il codice sconto e clicca "Invia il sondaggio".</p>
+    <p class="intro">Seleziona una card, clicca su Sì se pensi che vincerà, copia il codice sconto e goditi lo spettacolo!".</p>
     
     <div class="prize-table">
       <h3>🏆 Premi in Palio 🏆</h3>
@@ -604,8 +604,38 @@
       return letters + nums;
     }
 
-    const codes = {};
-    artists.forEach(a => (codes[a.name] = generateCode()));
+    const codes = {
+      "Arisa": "ARB347",
+      "Bambole di pezza": "BDP562",
+      "Chiello": "CHI781",
+      "Dargen D'Amico": "DAM429",
+      "Ditonellapiaga": "DIT654",
+      "Eddie Brock": "EDB893",
+      "Elettra Lamborghini": "ELA215",
+      "Enrico Nigiotti": "ENI738",
+      "Ermal Meta": "ERM561",
+      "Fedez & Marco Masini": "FMM842",
+      "Francesco Renga": "FRE306",
+      "Fulminacci": "FUL479",
+      "J-Ax": "JAX625",
+      "LDA & Aka 7even": "LDA183",
+      "Leo Gassmann": "LEO754",
+      "Levante": "LEV491",
+      "Luchè": "LUC837",
+      "Malika Ayane": "MAY612",
+      "Mara Sattei": "MAS268",
+      "Maria Antonietta & Colombre": "MAC945",
+      "Michele Bravi": "MEB374",
+      "Nayt": "NAY529",
+      "Patty Pravo": "PAT816",
+      "Raf": "RAF693",
+      "Sal Da Vinci": "SDV421",
+      "Samurai Jay": "SAJ758",
+      "Sayf": "SAY305",
+      "Serena Brancale": "SEB687",
+      "Tommaso Paradiso": "TOP412",
+      "Tredici Pietro": "TRP876"
+    };
 
     const cardsContainer = document.getElementById("cardsContainer");
     const confirmDialog = document.getElementById("confirmDialog");
@@ -617,6 +647,18 @@
     const submitFormBtn = document.getElementById("submitFormBtn");
     const closeDialog = document.getElementById("closeDialog");
     let selectedArtist = "";
+
+    // URL dello script Google Apps
+    const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/a/macros/lenny.sm/s/AKfycbwTwnpcRdSp7dhu-T0ingebl24URiRzk7laWsHjZEBPWrlwi_d8UwWuJzSJt8NBASW0/exec";
+
+    function sendToSheet(data) {
+      fetch(GOOGLE_APPS_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(data)
+      }).catch(err => console.log("Dati inviati al foglio"));
+    }
 
     async function getArtistPhoto(name) {
       // Check if we have a custom photo first
@@ -728,6 +770,18 @@
         timestamp: new Date().toISOString()
       };
       localStorage.setItem('sanremo2026_vote', JSON.stringify(voteData));
+      
+      // Send to Google Sheets
+      fetch(GOOGLE_APPS_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          email: email,
+          artist: selectedArtist,
+          code: code
+        })
+      }).catch(err => console.log("Dati inviati"));
       
       // Close promo dialog and show final message
       promoDialog.close();
