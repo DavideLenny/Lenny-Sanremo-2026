@@ -387,7 +387,7 @@
   </header>
 
   <main>
-    <p class="intro">Seleziona una card, clicca su Sì se pensi che vincerà, copia il codice e invia!".</p>
+    <p class="intro">Seleziona una card, clicca su Sì, copia il codice sconto e clicca "Invia il sondaggio".</p>
     
     <div class="prize-table">
       <h3>🏆 Premi in Palio 🏆</h3>
@@ -463,7 +463,7 @@
       <span id="codeText"></span>
       <span class="copy-icon">📋</span>
     </div>
-    <button id="submitFormBtn" style="display:none">Invia e goditi lo spettacolo</button>
+    <button id="submitFormBtn" style="display:none">Invia al sondaggio</button>
     <div class="modal-actions">
       <button id="closeDialog" class="btn-ghost">Chiudi</button>
     </div>
@@ -649,15 +649,18 @@
     let selectedArtist = "";
 
     // URL dello script Google Apps
-    const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/a/macros/lenny.sm/s/AKfycbwTwnpcRdSp7dhu-T0ingebl24URiRzk7laWsHjZEBPWrlwi_d8UwWuJzSJt8NBASW0/exec";
+    const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbye27fXAiTH_KigvuPFWm1E1Yxjg9vg_WuBYg8CwwoyPM9jQXQOWZ9UnYUdKPS4SWLK/exec";
 
     function sendToSheet(data) {
+      console.log("📤 Inviando dati al foglio:", data);
       fetch(GOOGLE_APPS_SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams(data)
-      }).catch(err => console.log("Dati inviati al foglio"));
+      })
+      .then(() => console.log("✅ Dati inviati con successo"))
+      .catch(err => console.log("❌ Errore:", err));
     }
 
     async function getArtistPhoto(name) {
@@ -791,13 +794,6 @@
       // Disable all further interactions
       document.body.style.pointerEvents = "none";
       finalDialog.style.pointerEvents = "all";
-      
-      // Open Google Form
-      const baseUrl = "https://docs.google.com/forms/d/e/FORM_ID/viewform?usp=pp_url";
-      const params = new URLSearchParams();
-      params.set("entry.ARTISTA", selectedArtist);
-      params.set("entry.CODICE", code);
-      window.open(baseUrl + "&" + params.toString(), "_blank");
     });
 
     // Copy code functionality for final dialog
@@ -817,5 +813,3 @@
   </script>
 </body>
 </html>
-
-
