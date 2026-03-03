@@ -394,7 +394,7 @@
   </header>
 
   <main>
-    <p class="intro">Seleziona una card, clicca su Sì, copia il codice sconto e clicca "Invia il sondaggio".</p>
+    <p class="intro" id="introText">Seleziona una card, clicca su Sì, copia il codice sconto e clicca "Invia il sondaggio".</p>
     
     <div class="prize-table">
       <h3>🏆 Premi in Palio 🏆</h3>
@@ -438,12 +438,20 @@
     </div>
   </dialog>
 
+  <dialog id="voteClosedDialog">
+    <h2 class="dialog-title">Votazioni chiuse</h2>
+    <p class="dialog-text">Le votazioni sono terminate. Se non hai già votato, non è più possibile ottenere o visualizzare i codici sconto degli artisti.</p>
+    <div class="modal-actions">
+      <button id="voteClosedCloseBtn" class="btn-ghost">Chiudi</button>
+    </div>
+  </dialog>
+
   <dialog id="alreadyVotedDialog">
     <h2 class="dialog-title">Hai già effettuato la tua votazione</h2>
     <p class="dialog-text" style="margin-bottom: 1rem;">Ecco il riepilogo della tua votazione:</p>
     <div style="background: rgba(30, 79, 145, 0.1); padding: 1rem; border-radius: 0.8rem; margin-bottom: 1rem;">
       <p style="margin: 0 0 0.5rem; font-weight: 700; color: #1f3d6d; font-size: 1.1rem;" id="votedArtist"></p>
-      <p style="margin: 0; color: #274e83; font-size: 0.95rem;" id="votedPrize">Premio attuale: 4€</p>
+      <p style="margin: 0; color: #274e83; font-size: 0.95rem;" id="votedPrize">Premio attuale: —</p>
     </div>
     <p class="dialog-text" style="margin: 0.5rem 0;">Il tuo codice sconto:</p>
     <div id="votedPromoCode" title="Clicca per copiare" style="display: inline-flex; align-items: center; gap: 0.6rem; margin-top: 0.5rem; padding: 0.8rem 1.2rem; background: linear-gradient(135deg, #ffd600, #ffeb67); border-radius: 0.6rem; font-size: 1.5rem; font-weight: 900; color: #111; letter-spacing: 2px; cursor: pointer; transition: transform 0.15s ease;">
@@ -466,7 +474,7 @@
 
   <dialog id="promoDialog">
     <h2 class="dialog-title">Codice sconto assegnato</h2>
-    <p class="dialog-text">Hai scelto il tuo vincitore! Questo codice vale 4€ sul prossimo ordine in app.</p>
+    <p class="dialog-text" id="promoIntro">Hai scelto il tuo vincitore! Questo codice vale 4€ sul prossimo ordine in app.</p>
     <p id="promoMessage"></p>
     <div id="promoCode" title="Clicca per copiare">
       <span id="codeText"></span>
@@ -480,11 +488,28 @@
   </dialog>
 
   <script>
+    const isVotingClosed = true;
+
+    const artistDiscountValues = {
+      "Sal Da Vinci": 15,
+      "Sayf": 10,
+      "Ditonellapiaga": 8,
+      "Arisa": 6,
+      "Fedez & Marco Masini": 6,
+    };
+
+    function getDiscountValue(artistName) {
+      return artistDiscountValues[artistName] || 4;
+    }
+
     // Check if user has already voted
     const votedData = localStorage.getItem('sanremo2026_vote');
+    const introText = document.getElementById("introText");
     const emailDialog = document.getElementById("emailDialog");
     const emailInput = document.getElementById("emailInput");
     const emailSubmitBtn = document.getElementById("emailSubmitBtn");
+    const voteClosedDialog = document.getElementById("voteClosedDialog");
+    const voteClosedCloseBtn = document.getElementById("voteClosedCloseBtn");
     const alreadyVotedDialog = document.getElementById("alreadyVotedDialog");
     const finalDialog = document.getElementById("finalDialog");
 
@@ -493,6 +518,7 @@
       const vote = JSON.parse(votedData);
       document.getElementById("votedArtist").textContent = `Artista: ${vote.artist}`;
       document.getElementById("votedCodeText").textContent = vote.code;
+      document.getElementById("votedPrize").textContent = `Premio attuale: ${getDiscountValue(vote.artist)}€`;
       alreadyVotedDialog.showModal();
       
       // Disable all artist cards
@@ -514,9 +540,19 @@
         });
       });
     } else {
-      // Show email dialog
-      emailDialog.showModal();
+      // Voting closed for users who have not voted yet
+      if (isVotingClosed) {
+        introText.textContent = "Le votazioni sono chiuse. Solo chi ha già votato può visualizzare il proprio codice sconto.";
+        voteClosedDialog.showModal();
+      } else {
+        // Show email dialog
+        emailDialog.showModal();
+      }
     }
+
+    voteClosedCloseBtn.addEventListener("click", () => {
+      voteClosedDialog.close();
+    });
 
     emailSubmitBtn.addEventListener("click", () => {
       const email = emailInput.value.trim();
@@ -624,7 +660,7 @@
       "Elettra Lamborghini": "ELA215",
       "Enrico Nigiotti": "ENI738",
       "Ermal Meta": "ERM561",
-      "Fedez & Marco Masini": "FMM842",
+      "Fedez & Marco Masini": "FMM847",
       "Francesco Renga": "FRE306",
       "Fulminacci": "FUL479",
       "J-Ax": "JAX625",
@@ -653,6 +689,7 @@
     const confirmYesBtn = document.getElementById("confirmYesBtn");
     const confirmNoBtn = document.getElementById("confirmNoBtn");
     const promoDialog = document.getElementById("promoDialog");
+    const promoIntro = document.getElementById("promoIntro");
     const promoMessage = document.getElementById("promoMessage");
     const submitFormBtn = document.getElementById("submitFormBtn");
     const closeDialog = document.getElementById("closeDialog");
@@ -716,7 +753,7 @@
 
       const pill = document.createElement("span");
       pill.className = "artist-pill";
-      pill.textContent = "Clicca per scegliere";
+      pill.textContent = isVotingClosed && !votedData ? "Votazioni chiuse" : "Clicca per scegliere";
 
       meta.appendChild(h2);
       meta.appendChild(p);
@@ -729,6 +766,11 @@
     });
 
     cardsContainer.addEventListener("click", (e) => {
+      if (isVotingClosed && !votedData) {
+        voteClosedDialog.showModal();
+        return;
+      }
+
       const card = e.target.closest(".artist-card");
       if (!card) return;
 
@@ -745,7 +787,9 @@
       confirmDialog.close();
       if (!selectedArtist) return;
       const code = codes[selectedArtist];
-      promoMessage.textContent = `Codice sconto 4€ per ${selectedArtist}:`;
+      const discountValue = getDiscountValue(selectedArtist);
+      promoIntro.textContent = `Hai scelto il tuo vincitore! Questo codice vale ${discountValue}€ sul prossimo ordine in app.`;
+      promoMessage.textContent = `Codice sconto ${discountValue}€ per ${selectedArtist}:`;
       document.getElementById("codeText").textContent = code;
       submitFormBtn.style.display = "inline-block";
       promoDialog.showModal();
